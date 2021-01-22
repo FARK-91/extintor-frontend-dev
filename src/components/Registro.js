@@ -68,7 +68,13 @@ fetchData()
     }
     if (count === 0){
       createUser()
+      localStorage.setItem("usuario", name)
+      alert("Su registro ha sido exitoso!")
       window.location.href = "./dashboard"
+      // setTimeout(() => {
+        
+      //   console.log('Esperando...', 'Esperando...')
+      // }, 1500);
     }
   }
 

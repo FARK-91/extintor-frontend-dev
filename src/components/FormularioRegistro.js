@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Grid,Paper,Avatar,TextField} from '@material-ui/core';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import { MakeStyles } from '@material-ui/core/styles';
@@ -12,8 +12,17 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from "@material-ui/core";
 
+const storage = localStorage.getItem("usuario")
+
 const FormularioRegistro = () => {
 
+  React.useEffect(() => {
+    if(storage !== null){
+      console.log(storage)
+    }else{
+      window.location.href = "./"
+    }
+  }, [])
 
 const paperStyle={padding :20,height:'80vh',width:900,margin:'20px auto'}
 const avatarStyle={backgroundColor:'#325ed8'}
@@ -233,6 +242,7 @@ const useStyles = makeStyles((theme1) => ({
       // this.setState({ postId: data.id });
     }
 
+  if(storage !== null){
     return (
         <div>
             <h2 align='center'>Formulario De Registro</h2>
@@ -323,6 +333,9 @@ const useStyles = makeStyles((theme1) => ({
         </div>
 
     )
+  }else{
+    return (<Fragment></Fragment>);
+  }
 }
 
 export default FormularioRegistro

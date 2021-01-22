@@ -11,8 +11,16 @@ import {
   Link
 } from "react-router-dom";
 
+const storage = localStorage.getItem("usuario")
+
 
 const Login=()=>{
+
+  React.useEffect(() => {
+    if(storage !== null){
+      localStorage.removeItem("usuario")
+    }
+  }, [])
 
   const [correo, setCorreo] = React.useState('')
   const [password, setPassword] = React.useState('')
@@ -60,7 +68,7 @@ const Login=()=>{
           count += 1
           if (item.password === password){
             count2 += 1
-            console.log(item)
+            localStorage.setItem("usuario", item.name)
             window.location.href = "./dashboard"
           }
         }

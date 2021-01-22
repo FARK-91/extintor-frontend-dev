@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 // import logo from '../img/app-logo.jpg';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -12,6 +12,8 @@ import {
   Link,
   NavLink
 } from "react-router-dom";
+
+const storage = localStorage.getItem("usuario")
 
 const useStyle = makeStyles((theme) => ({
   offset: {
@@ -31,30 +33,42 @@ const useStyle = makeStyles((theme) => ({
 
 const Navbar = () => {
   const classes = useStyle();
+  
+  React.useEffect(() => {
+    if(storage !== null){
+      console.log(storage)
+    }else{
+      window.location.href = "./"
+    }
+  }, [])
 
-  return (
-    <React.Fragment>
-      <AppBar position="fixed" color="primary">
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={6} className={classes.fondo}>
-            <Toolbar>
-              <div className="btn-group">
-                <Link to="/dashboard" className={classes.text}><HomeRoundedIcon/></Link>&nbsp;&nbsp;
-              </div>
-            </Toolbar>
+  if(storage !== null){
+    return (
+      <React.Fragment>
+        <AppBar position="fixed" color="primary">
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6} lg={6} className={classes.fondo}>
+              <Toolbar>
+                <div className="btn-group">
+                  <Link to="/dashboard" className={classes.text}><HomeRoundedIcon/></Link>&nbsp;&nbsp;
+                </div>
+              </Toolbar>
+            </Grid>
+            <Grid item xs={12} md={6} lg={6} className={classes.fondo}>
+              <Toolbar className="btn-group" className={classes.rightSideNavbar}>
+                <div className="btn-group">
+                  <Link to="/extintor" className={classes.text}>Registrar Extintor</Link>&nbsp;&nbsp;&nbsp;
+                  <NavLink to="/" className={classes.text} activeClassName="active">Salir</NavLink>&nbsp;&nbsp;
+                </div>
+              </Toolbar>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6} lg={6} className={classes.fondo}>
-            <Toolbar className="btn-group" className={classes.rightSideNavbar}>
-              <div className="btn-group">
-                <Link to="/extintor" className={classes.text}>Registrar Extintor</Link>&nbsp;&nbsp;&nbsp;
-                <NavLink to="/" className={classes.text} activeClassName="active">Salir</NavLink>&nbsp;&nbsp;
-              </div>
-            </Toolbar>
-          </Grid>
-        </Grid>
-      </AppBar>
-    </React.Fragment>
-  );
+        </AppBar>
+      </React.Fragment>
+    );
+  }else{
+    return (<Fragment></Fragment>);
+  }
 };
 
 export default Navbar;
