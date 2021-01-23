@@ -24,10 +24,12 @@ import {
       minWidth: 650,
     },
     mainTitle: {
-      marginBottom: 20, 
+      marginBottom: 20,
+      textAlign: 'center'
     },
     inconSize: {
-      fontSize: 16, 
+      fontSize: 18,
+      textAlign: 'center'
     }
   });
   const storage = localStorage.getItem("usuario")
@@ -50,7 +52,6 @@ const Inicio = () => {
 
   React.useEffect(() => {
     if(storage !== null){
-      console.log(storage)
       fetchData()
     }else{
       window.location.href = "./"
@@ -95,10 +96,10 @@ const fetchData = async () => {
       <Fragment>
         <TableContainer component={Paper}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4} lg={6}>
+            <Grid item xs={12} md={6} lg={6}>
               <Typography className={classes.mainTitle} variant="h4">Extintores</Typography>
             </Grid>
-            <Grid item xs={12} md={4} lg={6} className="inconSize">
+            <Grid item xs={12} md={6} lg={6} className={classes.inconSize}>
               <ErrorRoundedIcon style={{ color: orange.A200, fontSize: 20 }}/> Alerta recargar pronto <br/>
               <WarningRoundedIcon style={{ color: red[600], fontSize: 20 }}/> Fecha de recarga vencida
             </Grid>
@@ -132,7 +133,7 @@ const fetchData = async () => {
                   <TableCell align="center">{row.lastDate}</TableCell>
                   <TableCell align="center">{row.nextDate}</TableCell>
                   <TableCell align="center">
-                    <Link to="/users">
+                    <Link to="/extintor">
                       <button className="btn btn-success btn-sm float-right mr-2">
                         Recargar
                       </button>

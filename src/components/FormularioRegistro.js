@@ -18,7 +18,6 @@ const FormularioRegistro = () => {
 
   React.useEffect(() => {
     if(storage !== null){
-      console.log(storage)
     }else{
       window.location.href = "./"
     }
@@ -148,13 +147,15 @@ const useStyles = makeStyles((theme1) => ({
             customerID = item.id
             rowsData = item.exting.map(item2 => {
               historyData = item2.history.map(item3 => {
-                historyArr.push({
-                  id: item3.id,
-                  extinguisher: item3.extinguisher,
-                  customer: item3.customer,
-                  user: item3.user,
-                  last_recharge: item3.last_recharge
-                })
+                if(item3.serial === serial){
+                  historyArr.push({
+                    id: item3.id,
+                    extinguisher: item3.extinguisher,
+                    customer: item3.customer,
+                    user: item3.user,
+                    last_recharge: item3.last_recharge
+                  })
+                }
               })
               localArr.push({
                   id: item2.id,
@@ -163,19 +164,28 @@ const useStyles = makeStyles((theme1) => ({
                   model: item2.model,
                   last_recharge: item2.last_recharge,
                   next_recharge: item2.next_recharge,
-                  history: historyArr
+                  // history: historyArr
               })
             })
           }
         })
       }
       if (count === 0){
-        createData()
+        createData(historyArr)
+        setTimeout(() => {
+        console.log('Insertando datos...')
+        }, 3000);
         window.location.href = "./dashboard"
-      }else{updateData(localArr,historyArr,customerID)}
+      }else{
+        updateData(localArr,historyArr,customerID)
+        setTimeout(() => {
+          console.log('Insertando datos...')
+        }, 3000);
+        window.location.href = "./dashboard"
+      }
     }
 
-    const createData = async () => {
+    const createData = async (historyArr) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -190,57 +200,79 @@ const useStyles = makeStyles((theme1) => ({
               brand: marca,
               model: modelo,
               last_recharge: fechaU,
-              // next_recharge: fechaU,
-              history: [
-                {
-                  extinguisher: serial,
-                  customer: nombre,
-                  // user: item3.user,
-                  // last_recharge: item3.last_recharge
-                }
-              ]
+              next_recharge: fechaS,
+              // history: [
+              //   {
+              //     extinguisher: serial,
+              //     customer: nombre,
+              //     user: storage,
+              //     last_recharge: fechaU
+              //   }
+              // ]
             }
           ],
         })
       };
       const response = await fetch('http://localhost:3001/customers',requestOptions);
       const data = await response.json();
-      // this.setState({ postId: data.id });
+      updateExting(data.id, historyArr)
     }
 
     const updateData = async (localArr,historyArr,id) => {
-      console.log(localArr, 'localArr')
-      console.log(historyArr, 'historyArr')
-      console.log(id, 'id')
-      historyArr.push({
-        extinguisher: serial,
-        customer: nombre,
-        // user: item3.user,
-        // last_recharge: item3.last_recharge
-      })
       localArr.push({
         serial: serial,
         brand: marca,
         model: modelo,
         last_recharge: fechaU,
-        // next_recharge: item2.next_recharge,
-        history: historyArr
+        next_recharge: fechaS,
+        // history: historyArr
       })
       const updateOptions = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          name: nombre, 
           address: direccion, 
           phone: telefono,
-          doc: cedula,
           exting: localArr
         })
       };
-      const response = await fetch('http://localhost:3001/customers/id',updateOptions);
+
+      //Customer Update
+      const response = await fetch(`http://localhost:3001/customers/${id}`,updateOptions);
       const data = await response.json();
-      // this.setState({ postId: data.id });
+      updateExting(data.id, historyArr)
     }
+
+    // Exting Update
+    const updateExting = async (custId, historyArr) => {
+      let flag = ''
+      historyArr.push({
+        extinguisher: serial,
+        customer: nombre,
+        user: storage,
+        last_recharge: fechaS
+      })
+
+      const extingBody = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          history: historyArr
+        })
+      };
+
+      const responseCust = await fetch(`http://localhost:3001/customers/${custId}`);
+      const oneCust = await responseCust.json();
+      oneCust.exting.forEach((item) => {
+        if(item.serial === serial){
+          flag = item.id
+        }
+      })
+      if(flag !== ''){
+        const putExting = await fetch(`http://localhost:3001/extings/${flag}`,extingBody);
+        const extingData = await putExting.json();
+      }
+    } 
 
   if(storage !== null){
     return (
@@ -301,7 +333,7 @@ const useStyles = makeStyles((theme1) => ({
                                            id="date" onChange={ e => setfechaU(e.target.value) }
                                            label="Fecha Ultima Recarga"
                                            type="date"
-                                           className={classes.textField}
+                                          //  className={classes.textField}
                                            InputLabelProps={{
                                              shrink: true,
 
@@ -313,7 +345,7 @@ const useStyles = makeStyles((theme1) => ({
                                            id="date" onChange={ e => setfechaS(e.target.value) }
                                            label="Fecha Siguiente Recarga"
                                            type="date"
-                                           className={classes.textField}
+                                          //  className={classes.textField}
                                            InputLabelProps={{
                                           shrink: true,
                                            }}

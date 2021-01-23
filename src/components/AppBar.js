@@ -36,7 +36,6 @@ const Navbar = () => {
   
   React.useEffect(() => {
     if(storage !== null){
-      console.log(storage)
     }else{
       window.location.href = "./"
     }
@@ -47,14 +46,14 @@ const Navbar = () => {
       <React.Fragment>
         <AppBar position="fixed" color="primary">
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6} lg={6} className={classes.fondo}>
+            <Grid item xs={6} md={6} lg={6} className={classes.fondo}>
               <Toolbar>
                 <div className="btn-group">
                   <Link to="/dashboard" className={classes.text}><HomeRoundedIcon/></Link>&nbsp;&nbsp;
                 </div>
               </Toolbar>
             </Grid>
-            <Grid item xs={12} md={6} lg={6} className={classes.fondo}>
+            <Grid item xs={6} md={6} lg={6} className={classes.fondo}>
               <Toolbar className="btn-group" className={classes.rightSideNavbar}>
                 <div className="btn-group">
                   <Link to="/extintor" className={classes.text}>Registrar Extintor</Link>&nbsp;&nbsp;&nbsp;
